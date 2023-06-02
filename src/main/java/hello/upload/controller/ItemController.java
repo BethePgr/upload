@@ -34,7 +34,7 @@ public class ItemController {
     private final FileStore fileStore;
 
     @GetMapping("/items/new")
-    public String newItem(@ModelAttribute ItemForm form){
+    public String newItem(@ModelAttribute ItemForm form) {
         return "item-form";
     }
 
@@ -51,15 +51,15 @@ public class ItemController {
         item.setImageFiles(storeImageFiles);
         itemRepository.save(item);
 
-        redirectAttributes.addAttribute("itemId",item.getId());
+        redirectAttributes.addAttribute("itemId", item.getId());
 
         return "redirect:/items/{itemId}";
     }
 
     @GetMapping("/items/{id}")
-    public String items(@PathVariable Long id, Model model){
+    public String items(@PathVariable Long id, Model model) {
         Item item = itemRepository.findById(id);
-        model.addAttribute("item",item);
+        model.addAttribute("item", item);
         return "item-view";
     }
 
@@ -77,10 +77,11 @@ public class ItemController {
         String uploadFileName = item.getAttachFile().getUploadFileName();
 
         UrlResource urlResource = new UrlResource("file:" + fileStore.getFullPath(storeFileName));
-        log.info("uploadFileName={}",uploadFileName);
+        log.info("uploadFileName={}", uploadFileName);
         String encodedUploadFileName = UriUtils.encode(uploadFileName, StandardCharsets.UTF_8);
         String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,contentDisposition).body(urlResource);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+            .body(urlResource);
 
     }
 }
